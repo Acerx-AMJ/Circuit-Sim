@@ -1,0 +1,9 @@
+/.cache
+/.vs
+/.vscode
+/build
+/lib
+/out
+/*.dll
+/*.lib
+/.clangd
