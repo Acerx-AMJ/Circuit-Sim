@@ -1,21 +1,27 @@
 #include "game/state.hpp"
+#include "util/colors.hpp"
 #include "raylib.h"
 
 int main() {
-	InitWindow(800, 600, "Circuit Simulation");
-	SetTargetFPS(60);
+	SetConfigFlags(FLAG_VSYNC_HINT);
+	InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "Circuit Simulation");
+	SetExitKey(KEY_NULL);
 
-	Image icon = LoadImage("Circuit-SimIcon.png");
+	#ifndef __APPLE__
+	ToggleFullscreen();
+	#endif
+
+	Image icon = LoadImage("assets/Circuit-SimIcon.png");
 	SetWindowIcon(icon);
 	UnloadImage(icon);
 
-	changeState(StateType::loading);
+	changeState(StateType::menu);
 
 	while (!WindowShouldClose()) {
 		updateState();
 		
 		BeginDrawing();
-		ClearBackground(BLACK);
+		ClearBackground(C_BLACK);
 		renderState();
 		EndDrawing();
 	}
