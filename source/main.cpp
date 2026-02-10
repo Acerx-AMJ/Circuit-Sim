@@ -1,13 +1,22 @@
-#include <raylib.h>
+#include "game/state.hpp"
+#include "raylib.h"
 
 int main() {
 	InitWindow(800, 600, "Circuit Simulation");
 	SetTargetFPS(60);
 
+	Image icon = LoadImage("Circuit-SimIcon.png");
+	SetWindowIcon(icon);
+	UnloadImage(icon);
+
+	changeState(StateType::loading);
+
 	while (!WindowShouldClose()) {
+		updateState();
+		
 		BeginDrawing();
 		ClearBackground(BLACK);
-		DrawRectangle(50, 50, 50, 50, RED);
+		renderState();
 		EndDrawing();
 	}
 }
