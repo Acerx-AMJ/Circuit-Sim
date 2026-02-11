@@ -1,4 +1,5 @@
 #include "game/menu.hpp"
+#include "game/state.hpp"
 #include "ui/button.hpp"
 #include "util/colors.hpp"
 #include "util/math.hpp"
@@ -66,8 +67,32 @@ void updateMenuState() {
 
    // Update main menu
    for (int i = 0; i < buttonCount; i++) {
-      buttons[i].resize(2.1f, 3.0f + i, 2.0f, 0.75f);
-      buttons[i].updateBasedOnDropY(dropY);
+      Button &button = buttons[i];
+      button.resize(2.1f, 3.0f + i, 2.0f, 0.75f);
+      button.updateBasedOnDropY(dropY);
+
+      // Select circuits
+      if (i == 0 && button.clicked) {
+         changeState(StateType::simulation);
+         return;
+      }
+
+      // Tutorial
+      if (i == 1 && button.clicked) {
+         changeState(StateType::tutorial);
+         return;
+      }
+
+      // Options
+      if (i == 2 && button.clicked) {
+         changeState(StateType::option);
+         return;
+      }
+
+      // Quit
+      if (i == 3 && button.clicked) {
+         exitGame();
+      }
    }
 }
 
