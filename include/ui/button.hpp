@@ -15,6 +15,7 @@ struct Button {
 
    float scale = 1.0f;
    bool hovering = false;
+   bool forceHover = false;
    bool clicked = false;
 };
 

@@ -11,6 +11,9 @@
 
 constexpr float finalLoadingTime = 1.25f;
 constexpr float loadingTransitionTime = 1.5f;
+
+constexpr float keyRepeatDelay = 0.333f;
+constexpr float keyRepeatInterval = 0.125f;
 constexpr size_t buttonCount = 4;
 
 // Members
@@ -19,10 +22,20 @@ static float dropY;
 static float loadingIconRotation;
 static float finalLoadingTimer;
 static float loadingTransitionTimer;
-static bool finishedLoading;
+static bool finishedLoading = false;
+
+static float downKeyDelayTimer;
+static float downKeyIntervalTimer;
+static float upKeyDelayTimer;
+static float upKeyIntervalTimer;
+static size_t buttonIndex;
 
 static Texture2D loadingIcon;
 static Button buttons[buttonCount];
+
+// Function definitions
+
+bool isKeyRepeating(int key, float &repeatTimer, float &delayTimer);
 
 // Initialization/Deinitialization
 
@@ -31,8 +44,16 @@ void initializeMenuState() {
    loadingIconRotation = 0.0f;
    finalLoadingTimer = 0.0f;
    loadingTransitionTimer = 0.0f;
-   finishedLoading = false;
-   loadingIcon = LoadTexture("assets/loading.png");
+
+   if (!finishedLoading) {
+      loadingIcon = LoadTexture("assets/loading.png");
+   }
+
+   downKeyDelayTimer = 0.0f;
+   downKeyIntervalTimer = 0.0f;
+   upKeyDelayTimer = 0.0f;
+   upKeyIntervalTimer = 0.0f;
+   buttonIndex = buttonCount;
 
    buttons[0].text = "SELECT";
    buttons[1].text = "TUTORIAL";
@@ -63,6 +84,21 @@ void updateMenuState() {
       } else {
          return;
       }
+   } else {
+      dropY = getWindowHeight();
+   }
+
+   const bool shouldGoUp = isKeyRepeating(KEY_UP, upKeyDelayTimer, upKeyIntervalTimer);
+   const bool shouldGoDown = isKeyRepeating(KEY_DOWN, downKeyDelayTimer, downKeyIntervalTimer);
+
+   if (shouldGoUp) {
+      if (buttonIndex < buttonCount) buttons[buttonIndex].forceHover = false;
+      buttonIndex = (buttonIndex == 0 ? buttonCount - 1 : buttonIndex - 1);
+      buttons[buttonIndex].forceHover = true;
+   } else if (shouldGoDown) {
+      if (buttonIndex < buttonCount) buttons[buttonIndex].forceHover = false;
+      buttonIndex = (buttonIndex >= buttonCount - 1 ? 0 : buttonIndex + 1);
+      buttons[buttonIndex].forceHover = true;
    }
 
    // Update main menu
@@ -94,6 +130,11 @@ void updateMenuState() {
          exitGame();
       }
    }
+
+   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+      buttons[buttonIndex].forceHover = false;
+      buttonIndex = buttonCount;
+   }
 }
 
 void renderMenuState() {
@@ -101,7 +142,7 @@ void renderMenuState() {
    float unit = getWindowSizeUnit();
 
    // Render the main menu
-   if (loadingTransitionTimer > 0.0f) {
+   if (finishedLoading || loadingTransitionTimer > 0.0f) {
       DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), C_DARK_GRAY);
       DrawTextPro(GetFontDefault(), "Circuit-Sim", {unit, unit}, {0.0f, 0.0f}, 0.0f, fontSize, 1.0f, C_WHITE);
       for (int i = 0; i < buttonCount; i++) {
@@ -114,4 +155,29 @@ void renderMenuState() {
       drawTextureCentered(loadingIcon, {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f + dropY}, {unit, unit}, loadingIconRotation, C_WHITE);
       drawTextCentered("Circuit-Sim", getWindowCenterWithOffset({0.0f, -1.25f * unit + dropY}), fontSize, C_WHITE);
    }
+}
+
+// Helper functions
+
+bool isKeyRepeating(int key, float &repeatTimer, float &delayTimer) {
+   const bool pressed = IsKeyPressed(key);
+   const bool down = IsKeyDown(key);
+
+   if (!down) {
+      repeatTimer = 0.0f;
+      delayTimer = 0.0f;
+      return false; // For a key to be pressed, it must be down first
+   }
+
+   if (delayTimer < keyRepeatDelay) {
+      delayTimer += GetFrameTime();
+      return pressed;
+   }
+
+   repeatTimer += GetFrameTime();
+   if (repeatTimer >= keyRepeatInterval) {
+      repeatTimer = 0.0f;
+      return true;
+   }
+   return pressed;
 }
