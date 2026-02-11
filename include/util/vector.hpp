@@ -3,9 +3,15 @@
 
 #include "raylib.h"
 
-float getWindowWidth();
-float getWindowHeight();
 Vector2 getWindowSize();
 Vector2 getWindowCenter();
+Vector2 getWindowCenterWithOffset(const Vector2 &offset);
+
+float getWindowWidth();
+float getWindowHeight();
+float getWindowWidthUnit();
+float getWindowHeightUnit();
+float getWindowSizeUnit();
+float getWindowFontSize();
 
 #endif

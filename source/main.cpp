@@ -3,12 +3,12 @@
 #include "raylib.h"
 
 int main() {
-	SetConfigFlags(FLAG_VSYNC_HINT);
-	InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "Circuit Simulation");
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
+	InitWindow(800, 600, "Circuit-Sim");
 	SetExitKey(KEY_NULL);
 
 	#ifndef __APPLE__
-	ToggleFullscreen();
+	// ToggleFullscreen();
 	#endif
 
 	Image icon = LoadImage("assets/Circuit-SimIcon.png");
@@ -21,7 +21,7 @@ int main() {
 		updateState();
 		
 		BeginDrawing();
-		ClearBackground(C_BLACK);
+		ClearBackground(C_WHITE);
 		renderState();
 		EndDrawing();
 	}
