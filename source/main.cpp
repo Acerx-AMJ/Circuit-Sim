@@ -21,7 +21,7 @@ int main() {
 		updateState();
 		
 		BeginDrawing();
-		ClearBackground(C_WHITE);
+		ClearBackground(C_BLACK);
 		renderState();
 		EndDrawing();
 	}

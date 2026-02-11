@@ -60,9 +60,9 @@ void renderMenuState() {
       }
 
       
-      DrawRectangleV({0.0f, dropY}, getWindowSize(), C_BLACK);
-      drawTextureCentered(loadingIcon, {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f + dropY}, {unit, unit}, loadingIconRotation, WHITE);
-      drawTextCentered("Circuit-Sim", getWindowCenterWithOffset({0.0f, -1.25f * unit + dropY}), fontSize, WHITE);
+      DrawRectangleV({0.0f, dropY}, getWindowSize(), C_DARK_GREEN);
+      drawTextureCentered(loadingIcon, {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f + dropY}, {unit, unit}, loadingIconRotation, C_WHITE);
+      drawTextCentered("Circuit-Sim", getWindowCenterWithOffset({0.0f, -1.25f * unit + dropY}), fontSize, C_WHITE);
       return;
    }
 }
