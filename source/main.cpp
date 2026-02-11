@@ -7,10 +7,6 @@ int main() {
 	InitWindow(800, 600, "Circuit-Sim");
 	SetExitKey(KEY_NULL);
 
-	#ifndef __APPLE__
-	// ToggleFullscreen();
-	#endif
-
 	Image icon = LoadImage("assets/Circuit-SimIcon.png");
 	SetWindowIcon(icon);
 	UnloadImage(icon);
