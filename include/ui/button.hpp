@@ -4,7 +4,6 @@
 #include "raylib.h"
 
 struct Button {
-   void resize(float unitX, float unitY, float unitSizeX, float unitSizeY);
    void update();
    void updateBasedOnDropY(float dropY);
    void render();

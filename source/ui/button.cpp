@@ -1,14 +1,7 @@
 #include "ui/button.hpp"
 #include "util/colors.hpp"
 #include "util/render.hpp"
-#include "util/vector.hpp"
 #include "raymath.h"
-
-void Button::resize(float unitX, float unitY, float unitSizeX, float unitSizeY) {
-   float unit = getWindowSizeUnit();
-   size = {unit * unitSizeX, unit * unitSizeY};
-   position = {unit * unitX, unit * unitY};
-}
 
 void Button::update() {
    hovering = CheckCollisionPointRec(GetMousePosition(), {position.x - size.x / 2.0f, position.y - size.y / 2.0f, size.x, size.y});
@@ -33,5 +26,5 @@ void Button::render() {
    
    drawRectCentered(position, Vector2AddValue(newSize, 4.0f), (hovering || forceHover ? Color C_WHITE : Color C_BLACK));
    drawRectCentered(position, newSize, (hovering || forceHover ? hoverColor : color));
-   drawTextCentered(text, position, getWindowFontSize() * 0.4f, C_WHITE);
+   drawTextCentered(text, position, 40.0f, C_WHITE);
 }

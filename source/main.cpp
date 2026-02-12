@@ -4,8 +4,12 @@
 
 int main() {
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
-	InitWindow(800, 600, "Circuit-Sim");
+	InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "Circuit-Sim");
 	SetExitKey(KEY_NULL);
+
+#ifndef __APPLE__
+	ToggleFullscreen();
+#endif
 
 	Image icon = LoadImage("assets/Circuit-SimIcon.png");
 	SetWindowIcon(icon);

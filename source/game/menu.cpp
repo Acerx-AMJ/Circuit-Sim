@@ -4,7 +4,6 @@
 #include "util/colors.hpp"
 #include "util/math.hpp"
 #include "util/render.hpp"
-#include "util/vector.hpp"
 #include "raylib.h"
 #include <cmath>
 
@@ -63,6 +62,8 @@ void initializeMenuState() {
    for (int i = 0; i < buttonCount; i++) {
       buttons[i].color = C_GREEN;
       buttons[i].hoverColor = C_LIGHT_GREEN;
+      buttons[i].size = {200.0f, 75.0f};
+      buttons[i].position = {210.0f, (3.0f + i) * 100.0f};
    }
 }
 
@@ -80,13 +81,13 @@ void updateMenuState() {
 
       if (finalLoadingTimer >= finalLoadingTime) {
          loadingTransitionTimer += GetFrameTime();
-         dropY = easeInOutSine(loadingTransitionTimer / loadingTransitionTime) * getWindowHeight();
+         dropY = easeInOutSine(loadingTransitionTimer / loadingTransitionTime) * GetScreenHeight();
          finishedLoading = (loadingTransitionTimer >= loadingTransitionTime);
       } else {
          return;
       }
    } else {
-      dropY = getWindowHeight();
+      dropY = (float)GetScreenHeight();
    }
 
    const bool shouldGoUp = isKeyRepeating(KEY_UP, upKeyDelayTimer, upKeyIntervalTimer);
@@ -105,7 +106,6 @@ void updateMenuState() {
    // Update main menu
    for (int i = 0; i < buttonCount; i++) {
       Button &button = buttons[i];
-      button.resize(2.1f, 3.0f + i, 2.0f, 0.75f);
       button.updateBasedOnDropY(dropY);
 
       // Select circuits
@@ -139,28 +139,25 @@ void updateMenuState() {
 }
 
 void renderMenuState() {
-   float fontSize = getWindowFontSize();
-   float unit = getWindowSizeUnit();
-
    // Render the main menu
    if (finishedLoading || loadingTransitionTimer > 0.0f) {
       DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), C_DARK_GRAY);
-      DrawTextPro(GetFontDefault(), "Circuit-Sim", {unit, unit}, {0.0f, 0.0f}, 0.0f, fontSize, 1.0f, C_WHITE);
+      DrawTextPro(GetFontDefault(), "Circuit-Sim", {50.0f, 50.0f}, {0.0f, 0.0f}, 0.0f, 120.0f, 1.0f, C_WHITE);
       for (int i = 0; i < buttonCount; i++) {
          buttons[i].render();
       }
    
       if (buttons[buttonIndex].forceHover) {
-         const Vector2 offset = {buttons[buttonIndex].position.x + buttons[buttonIndex].size.x, buttons[buttonIndex].position.y + std::sinf((float)GetTime() * 17.5f) * (unit * 0.1f)};
-         drawTriangleCentered(offset, (unit * 0.5f) + 4.0f, C_WHITE);
-         drawTriangleCentered(offset, unit * 0.5f, C_LIGHT_GREEN);
+         const Vector2 offset = {buttons[buttonIndex].position.x + buttons[buttonIndex].size.x, buttons[buttonIndex].position.y + std::sinf((float)GetTime() * 17.5f) * 10.0f};
+         drawTriangleCentered(offset, 50.0f + 4.0f, C_WHITE);
+         drawTriangleCentered(offset, 50.0f, C_LIGHT_GREEN);
       }
    }
 
    if (!finishedLoading) {
-      DrawRectangleV({0.0f, dropY}, getWindowSize(), C_DARK_GREEN);
-      drawTextureCentered(loadingIcon, {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f + dropY}, {unit, unit}, loadingIconRotation, C_WHITE);
-      drawTextCentered("Circuit-Sim", getWindowCenterWithOffset({0.0f, -1.25f * unit + dropY}), fontSize, C_WHITE);
+      DrawRectangleV({0.0f, dropY}, {(float)GetScreenWidth(), (float)GetScreenHeight()}, C_DARK_GREEN);
+      drawTextureCentered(loadingIcon, {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f + dropY}, {100.0f, 100.0f}, loadingIconRotation, C_WHITE);
+      drawTextCentered("Circuit-Sim", {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f + dropY - 125.0f}, 120.0f, C_WHITE);
    }
 }
 
