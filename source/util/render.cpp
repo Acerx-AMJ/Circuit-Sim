@@ -15,8 +15,8 @@ void drawRectCentered(const struct Vector2 &position, const struct Vector2 &size
 }
 
 void drawTriangleCentered(const struct Vector2 &position, float size, const struct Color &color) {
-   const Vector2 A = Vector2Add(position, Vector2Scale({-0.8667f, -0.5f}, size));
-   const Vector2 B = Vector2Add(position, Vector2Scale({ 0.8667f, -0.5f}, size));
-   const Vector2 C = Vector2Add(position, Vector2Scale({ 0.0f,     1.0f}, size));
-   DrawTriangle(A, B, C, color);
+   const Vector2 A = Vector2Add(position, Vector2Scale({ 0.5f, -0.8667f}, size));
+   const Vector2 B = Vector2Add(position, Vector2Scale({ 0.5f,  0.8667f}, size));
+   const Vector2 C = Vector2Add(position, Vector2Scale({-1.0f,  0.0f},    size));
+   DrawTriangle(C, B, A, color);
 }

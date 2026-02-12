@@ -6,6 +6,7 @@
 #include "util/render.hpp"
 #include "util/vector.hpp"
 #include "raylib.h"
+#include <cmath>
 
 // Constants
 
@@ -131,7 +132,7 @@ void updateMenuState() {
       }
    }
 
-   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsKeyPressed(KEY_ESCAPE)) {
       buttons[buttonIndex].forceHover = false;
       buttonIndex = buttonCount;
    }
@@ -147,6 +148,12 @@ void renderMenuState() {
       DrawTextPro(GetFontDefault(), "Circuit-Sim", {unit, unit}, {0.0f, 0.0f}, 0.0f, fontSize, 1.0f, C_WHITE);
       for (int i = 0; i < buttonCount; i++) {
          buttons[i].render();
+      }
+   
+      if (buttons[buttonIndex].forceHover) {
+         const Vector2 offset = {buttons[buttonIndex].position.x + buttons[buttonIndex].size.x, buttons[buttonIndex].position.y + std::sinf((float)GetTime() * 17.5f) * (unit * 0.1f)};
+         drawTriangleCentered(offset, (unit * 0.5f) + 4.0f, C_WHITE);
+         drawTriangleCentered(offset, unit * 0.5f, C_LIGHT_GREEN);
       }
    }
 
